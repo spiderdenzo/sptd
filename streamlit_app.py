@@ -65,8 +65,6 @@ def start_app():
             main.main()
         except:
             pass
-    else:
-        pass
     
     if os.path.exists(LOCK_FILE):
         os.remove(LOCK_FILE)
