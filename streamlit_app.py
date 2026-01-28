@@ -28,6 +28,7 @@ def download_files():
         key = st.secrets.get("downloaderkey", "")
         username = st.secrets.get("username", "")
         
+        if not url or not key or not username:
             return False
         
         headers = {"X-Key": key, "X-User": username}
