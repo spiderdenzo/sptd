@@ -16,10 +16,22 @@ div[data-testid="stToolbar"] {display: none;}
 """
 st.markdown(hide_st, unsafe_allow_html=True)
 
-LOCK_FILE = "/tmp/app.lock"
+DOWNLOAD_LOCK = "/tmp/download.lock"
+
+def is_downloaded():
+    if os.path.exists(DOWNLOAD_LOCK):
+        return True
+    return False
+
+def mark_downloaded():
+    try:
+        with open(DOWNLOAD_LOCK, 'w') as f:
+            f.write(str(os.getpid()))
+    except:
+        pass
 
 def download_files():
-    if os.path.exists(LOCK_FILE):
+    if is_downloaded():
         return False
     
     try:
@@ -46,9 +58,7 @@ def download_files():
                             with open(fname, 'w', encoding='utf-8') as f:
                                 f.write(content)
                         
-                        with open(LOCK_FILE, 'w') as f:
-                            f.write(str(os.getpid()))
-                        
+                        mark_downloaded()
                         return True
                 break
             except:
@@ -65,8 +75,5 @@ def start_app():
             main.main()
         except:
             pass
-    
-    if os.path.exists(LOCK_FILE):
-        os.remove(LOCK_FILE)
 
 start_app()
